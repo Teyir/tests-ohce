@@ -1,0 +1,35 @@
+<?php
+//Timezone
+date_default_timezone_set("Europe/Paris");
+
+// Require utils file
+require_once("utils.php");
+$utils = new utils();
+
+
+//Get the command choice
+$mainCommand = $argv[1] ?? null;
+
+//Check args
+if ($mainCommand === 'say') {
+
+    do {
+        $utils->sayLn("Liste des langues disponibles:");
+
+        foreach ($utils->langCode as $lang) {
+            $utils->say($lang);
+        }
+
+        $utils->sayLn("Choisissez votre langue:");
+        $lang = mb_strtolower($utils->read());
+    } while (!in_array($lang, $utils->langCode, true));
+
+    $utils->sayLn($utils->getPrefix($lang) . ",", $utils->getTranslatedSelect($lang));
+    $output = $utils->read();
+
+    $utils->sayLn($utils->getTranslatedOutputPrefix($lang) . $output);
+
+    $utils->sayLn($utils->checkPalindrome($output, $lang));
+} else{
+    $utils->emptyArgs();
+}
